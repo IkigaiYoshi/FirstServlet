@@ -3,12 +3,10 @@ import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 import java.util.logging.Logger;
 
 
@@ -18,26 +16,7 @@ public class PhoneBookServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) {
-        try {
-            File list = new File("/home/ikigai/IdeaProjects/FirstServlet/list.txt");
-            String in;
-            Scanner sc = new Scanner(list);
-            while (sc.hasNextLine()) {
-                in = sc.nextLine();
-                String[] tmp = in.split(" ");
-                StringBuilder name = new StringBuilder(tmp[0]);
-                for (int i = 1; i < tmp.length - 1; i++) {
-                    name.append(" ");
-                    name.append(tmp[i]);
-                }
-                for (int i = 0; i < Integer.parseInt(tmp[tmp.length - 1]); i++) {
-                    phoneBook.addNamePhone(name.toString(), sc.nextLine());
-                }
-            }
-            sc.close();
-        } catch (IOException e) {
-            logger.info(e.toString());
-        }
+        phoneBook.readFile();
     }
 
     @Override
@@ -66,6 +45,7 @@ public class PhoneBookServlet extends HttpServlet {
             }
             out.println(getMainPage());
             out.println("</body>\n</html>");
+            phoneBook.writeFile();
         } catch (IOException e) {
             logger.info(e.toString());
         }
